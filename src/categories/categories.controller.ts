@@ -9,8 +9,8 @@ import {
   Delete,
   Put,
 } from '@nestjs/common';
-import { TasksService } from './tasks.service';
-import { TaskDto } from './dto/task.dto';
+import { CategoriesService } from './categories.service';
+import { CategoryDto } from './dto/category.dto';
 import {
   ApiTags,
   ApiResponse,
@@ -22,19 +22,19 @@ import {
 import { JwtTokenService } from '../auth/jwt/jwt-token.service';
 import { AuthGuard } from '@nestjs/passport';
 
-@Controller('tasks')
+@Controller('categories')
 @UseGuards(AuthGuard('jwt'))
-@ApiTags('Tasks')
+@ApiTags('Categories')
 @ApiBearerAuth()
-export class TasksController {
+export class CategoriesController {
   constructor(
-    private tasksService: TasksService,
+    private categogryService: CategoriesService,
     private jwt: JwtTokenService,
   ) {}
 
   //add task
   @Post()
-  @ApiBody({ type: TaskDto })
+  @ApiBody({ type: CategoryDto })
   @ApiResponse({ status: 201, description: 'Task created successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
@@ -43,12 +43,12 @@ export class TasksController {
   async addTask(
     @Req() request,
 
-    @Body() dto: TaskDto,
+    @Body() dto: CategoryDto,
   ) {
     const token = request.headers.authorization?.split(' ')[1];
     const userId = await this.jwt.getUserIdFromToken(token);
     console.log(userId);
-    return await this.tasksService.addTask(dto, userId);
+    return await this.categogryService.addCategory(dto, userId);
   }
 
   @Get()
@@ -61,7 +61,7 @@ export class TasksController {
     const token = request.headers.authorization?.split(' ')[1];
     const userId = await this.jwt.getUserIdFromToken(token);
     // console.log(userId);
-    return await this.tasksService.getTasks(userId);
+    return await this.categogryService.getCategories(userId);
   }
   //get one
   @Get(':id')
@@ -82,7 +82,7 @@ export class TasksController {
   @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async deleteTask(@Param('id') id: string) {
-    return await this.tasksService.deleteTask(id);
+    return await this.categogryService.deleteCategory(id);
   }
 
   //edit
@@ -92,48 +92,7 @@ export class TasksController {
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  async edit(@Body() dto: TaskDto, @Param('id') id: string) {
-    return await this.tasksService.editTask(id, dto);
-  }
-  //get pending
-  @Get('/pending')
-  @ApiResponse({ status: 200, description: 'Task retrieved successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not found' })
-  @ApiResponse({ status: 500, description: 'Internal server error' })
-  async getToDoTasks(@Param('id') id: string, @Req() request) {
-    const userId = await this.jwt.getUserIdFromToken(
-      request.headers.authorization?.split(' ')[1],
-    );
-    return await this.tasksService.getTodoTasks(userId);
-  }
-
-  //get completed
-  @Get('/done')
-  @ApiResponse({ status: 200, description: 'Task retrieved successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not found' })
-  @ApiResponse({ status: 500, description: 'Internal server error' })
-  async getDoneTasks(@Param('id') id: string, @Req() request) {
-    const userId = await this.jwt.getUserIdFromToken(
-      request.headers.authorization?.split(' ')[1],
-    );
-    return await this.tasksService.getCompletedTasks(userId);
-  }
-
-  //get in progress
-  @Get('/running')
-  @ApiResponse({ status: 200, description: 'Task retrieved successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiResponse({ status: 404, description: 'Not found' })
-  @ApiResponse({ status: 500, description: 'Internal server error' })
-  async getInProgressTasks(@Param('id') id: string, @Req() request) {
-    const userId = await this.jwt.getUserIdFromToken(
-      request.headers.authorization?.split(' ')[1],
-    );
-    return await this.tasksService.getInProgressTasks(userId);
+  async edit(@Body() dto: CategoryDto, @Param('id') id: string) {
+    return await this.categogryService.editCategory(id, dto);
   }
 }

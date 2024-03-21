@@ -34,7 +34,7 @@ async function bootstrap() {
       name: 'x-api-key',
       allowEmptyValue: false,
     })
-    .addTag('/')
+    .addTag('Endpoints')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/v1/docs', app, document);

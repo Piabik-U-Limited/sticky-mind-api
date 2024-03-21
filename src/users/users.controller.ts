@@ -1,12 +1,23 @@
-import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  UseGuards,
+  Put,
+  Patch,
+  Delete,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UserDto } from '../auth/dto/user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiKeyGuard } from '../auth/guards/apikey.guard';
+
 @Controller('users')
 @UseGuards(AuthGuard('jwt'))
 @ApiTags('Users')
+@ApiBearerAuth()
 export class UsersController {
   constructor(private usersService: UsersService) {}
   @Get()
@@ -51,7 +62,7 @@ export class UsersController {
     return await this.usersService.getUserById(id);
   }
 
-  @Post('delete/:id')
+  @Delete('/:id')
   @ApiResponse({
     status: 200,
     description: 'Delete user by id',
@@ -73,7 +84,7 @@ export class UsersController {
   }
 
   //edit
-  @Post('edit/:id')
+  @Patch('/:id')
   @ApiResponse({
     status: 200,
     description: 'Edit user by id',

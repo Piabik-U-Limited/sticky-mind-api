@@ -57,7 +57,7 @@ export class JwtTokenService {
       }
       throw new Error('User ID not found in token');
     } catch (error) {
-      throw new Error('Failed to decode token');
+      throw new Error('User not verified ');
     }
   }
 }
