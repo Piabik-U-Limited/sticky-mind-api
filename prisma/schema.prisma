@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id    String @id @default(uuid())
+  email String  @unique
+  name  String?
+  phone String?
+  username String?
+  joinTime DateTime @default(now())
+  password Password?
+  gender           Gender?
+   photo            ProfilePhoto?
+    otp              Otp[]
+   token            Token[]
+  tasks Task[]
+   categoried Category[]
+   notes Note[]
+
+
+}
+enum Gender {
+  Male
+  Female
+}
+
+model Password{
+    id    String @id @default(uuid())
+    hash String 
+    salt String
+    setAt  DateTime   @default(now())
+    updatedAt DateTime? 
+    user    User    @relation(fields: [userId], references: [id])
+    userId  String @unique
+
+}
+model ProfilePhoto {
+  id        String    @id @unique() @default(uuid())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String    @unique
+  url       String
+  publicId  String
+  setAt     DateTime  @default(now())
+  updatedAt DateTime?
+}
+model Token {
+  id     String @id @unique() @default(uuid())
+  token  String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+}
+
+model Otp {
+  id     String   @id @default(uuid())
+  code   String
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  setAt  DateTime @default(now())
+
+  @@unique([code, userId])
+}
+
+model Task {
+  id    String @id @default(uuid())
+  title     String
+  description   String?
+  published Boolean? @default(false)
+  user    User?    @relation(fields: [userId], references: [id])
+  userId  String?
+  status Status @default(Upcoming)
+  category    Category    @relation(fields: [categoryId], references: [id])
+    categoryId  String @unique
+    duedate DateTime 
+    duetime DateTime
+  
+}
+enum Status{
+  Upcoming
+  Completed
+  InProgress
+
+}
+
+model Category {
+  id    String @id @default(uuid())
+  name     String
+  content   String?
+  published Boolean? @default(false)
+  user    User?    @relation(fields: [userId], references: [id])
+    userId  String?
+    tasks Task[]
+
+
+  
+}
+
+model Note {
+   id    String @id @default(uuid())
+  title     String
+  subtitle String?
+  content   String? 
+  user    User?    @relation(fields: [userId], references: [id])
+  userId  String?
+  createdAt DateTime @default(now())
+  edited Boolean @default(false)
+  editAt DateTime?
+
+
+}
+
