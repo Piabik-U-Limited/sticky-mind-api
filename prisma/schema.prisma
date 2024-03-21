@@ -21,6 +21,7 @@ model User {
   phone String?
   username String?
   joinTime DateTime @default(now())
+  verified Boolean @default(false)
   password Password?
   gender           Gender?
    photo            ProfilePhoto?
@@ -43,8 +44,9 @@ model Password{
     salt String
     setAt  DateTime   @default(now())
     updatedAt DateTime? 
-    user    User    @relation(fields: [userId], references: [id])
+    user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId  String @unique
+    
 
 }
 model ProfilePhoto {
@@ -78,19 +80,19 @@ model Task {
   title     String
   description   String?
   published Boolean? @default(false)
-  user    User?    @relation(fields: [userId], references: [id])
+  user    User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String?
-  status Status @default(Upcoming)
-  category    Category    @relation(fields: [categoryId], references: [id])
+  status Status @default(TODO)
+  category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
     categoryId  String @unique
     duedate DateTime 
     duetime DateTime
   
 }
 enum Status{
-  Upcoming
-  Completed
-  InProgress
+  TODO
+  IN_PROGRESS
+  DONE
 
 }
 
@@ -99,7 +101,7 @@ model Category {
   name     String
   content   String?
   published Boolean? @default(false)
-  user    User?    @relation(fields: [userId], references: [id])
+  user    User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId  String?
     tasks Task[]
 
@@ -112,7 +114,7 @@ model Note {
   title     String
   subtitle String?
   content   String? 
-  user    User?    @relation(fields: [userId], references: [id])
+  user    User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId  String?
   createdAt DateTime @default(now())
   edited Boolean @default(false)

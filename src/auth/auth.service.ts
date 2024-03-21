@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { UserDto } from './dto/user.dto';
+import { UserDto, OtpDto } from './dto/user.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtTokenService } from './jwt/jwt-token.service';
 import { ConfigService } from '@nestjs/config';
@@ -41,7 +41,7 @@ export class AuthService {
     });
 
     const verificationToken = crypto.randomBytes(20).toString('hex');
-    const otp = this.otpService.generateOtp();
+    const otp = this.generateOtp();
     await this.storeOtp(user.id, otp);
     await this.storeToken(user.id, verificationToken);
     return {
@@ -51,6 +51,7 @@ export class AuthService {
     };
   }
 
+  // Login
   async loginUser(dto: LoginDto) {
     const user = await this.prisma.user.findUnique({
       where: {
@@ -78,6 +79,60 @@ export class AuthService {
       message: 'Login successful',
       user: user,
       tokens: await this.jwt.signTokens(user.id, dto.email, dto.password),
+    };
+  }
+
+  //verification of email
+  async verifyAccount(dto: OtpDto) {
+    const otp = await this.prisma.otp.findFirst({
+      where: {
+        code: dto.code,
+      },
+    });
+    if (!otp) throw new NotFoundException('Invalid OTP');
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: otp.userId,
+      },
+    });
+    if (!user) throw new NotFoundException('User not found');
+    await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        verified: true,
+      },
+    });
+    await this.prisma.otp.delete({
+      where: {
+        id: otp.id,
+      },
+    });
+    return {
+      message: 'Email your email has been verified',
+      verified: true,
+      user,
+    };
+  }
+
+  async verifyWithLink(token: string) {
+    const tokenData = await this.prisma.token.findFirst({
+      where: {
+        token,
+      },
+    });
+    if (!tokenData) throw new NotFoundException('Invalid token');
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: tokenData.userId,
+      },
+    });
+    if (!user) throw new NotFoundException('User not found');
+    return {
+      message: 'Email your email has been verified',
+      verified: true,
+      user,
     };
   }
 

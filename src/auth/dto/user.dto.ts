@@ -20,3 +20,8 @@ export class UserDto {
   @IsString()
   username: string;
 }
+export class OtpDto {
+  @IsString()
+  @IsNotEmpty()
+  code: string;
+}

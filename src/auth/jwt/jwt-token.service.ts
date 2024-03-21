@@ -48,4 +48,16 @@ export class JwtTokenService {
       throw new ForbiddenException('Invalid token');
     }
   }
+
+  async getUserIdFromToken(token: string): Promise<string> {
+    try {
+      const decoded = this.jwt.decode(token);
+      if (decoded && typeof decoded === 'object' && 'userId' in decoded) {
+        return decoded.userId;
+      }
+      throw new Error('User ID not found in token');
+    } catch (error) {
+      throw new Error('Failed to decode token');
+    }
+  }
 }
