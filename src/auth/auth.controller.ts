@@ -1,8 +1,10 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { OtpDto, UserDto } from './dto/user.dto';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
+import { EmailGuard } from './guards/email.guard';
+import { PhoneGuard } from './guards/phone.guard';
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
@@ -14,6 +16,7 @@ export class AuthController {
     status: 201,
     description: 'Account created successfully',
   })
+  @UseGuards(EmailGuard, PhoneGuard)
   async signUp(@Body() dto: UserDto) {
     return this.authService.signUp(dto);
   }

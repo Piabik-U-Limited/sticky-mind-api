@@ -14,7 +14,7 @@ async function bootstrap() {
     // preflightContinue: false,
     credentials: true,
     allowedHeaders:
-      'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-API-KEY',
   };
   app.enableCors(options);
 

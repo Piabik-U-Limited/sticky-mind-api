@@ -47,7 +47,6 @@ export class TasksController {
   ) {
     const token = request.headers.authorization?.split(' ')[1];
     const userId = await this.jwt.getUserIdFromToken(token);
-    console.log(userId);
     return await this.tasksService.addTask(dto, userId);
   }
 
@@ -60,7 +59,7 @@ export class TasksController {
   async getTasks(@Req() request) {
     const token = request.headers.authorization?.split(' ')[1];
     const userId = await this.jwt.getUserIdFromToken(token);
-    // console.log(userId);
+
     return await this.tasksService.getTasks(userId);
   }
   //get one

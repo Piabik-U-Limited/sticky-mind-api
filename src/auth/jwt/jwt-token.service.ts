@@ -29,7 +29,7 @@ export class JwtTokenService {
         },
         {
           secret: this.config.get('APP_SECRET'),
-          expiresIn: '12h',
+          expiresIn: '7d',
         },
       ),
     ]);

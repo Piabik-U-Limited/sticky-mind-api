@@ -4,6 +4,7 @@ import { UsersModule } from './users/users.module';
 import { TasksModule } from './tasks/tasks.module';
 import { CategoriesModule } from './categories/categories.module';
 import { NotesModule } from './notes/notes.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { NotesModule } from './notes/notes.module';
     CategoriesModule,
     TasksModule,
     NotesModule,
+    DashboardModule,
   ],
   controllers: [],
   providers: [],

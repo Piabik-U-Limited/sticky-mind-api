@@ -4,6 +4,8 @@ import {
   IsDateString,
   IsOptional,
   IsEnum,
+  IsTimeZone,
+  IsNumber,
 } from 'class-validator';
 import { Status } from '@prisma/client';
 export class TaskDto {
@@ -17,7 +19,7 @@ export class TaskDto {
 
   @IsDateString()
   @IsOptional()
-  duedate: Date;
+  date: Date;
 
   @IsOptional()
   @IsEnum(Status, { message: 'Invalid status' })
@@ -26,6 +28,12 @@ export class TaskDto {
   @IsNotEmpty()
   categoryId: string;
 
-  @IsDateString()
-  duetime: Date;
+  @IsString()
+  start: string;
+
+  @IsString()
+  end: string;
+
+  @IsNumber()
+  priority: number;
 }

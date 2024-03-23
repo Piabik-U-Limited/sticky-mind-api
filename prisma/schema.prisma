@@ -84,9 +84,12 @@ model Task {
   userId  String?
   status Status @default(TODO)
   category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-    categoryId  String @unique
-    duedate DateTime 
-    duetime DateTime
+    categoryId  String 
+    date DateTime 
+    start String
+    end String
+    priority Int
+    completedAt DateTime?
   
 }
 enum Status{
