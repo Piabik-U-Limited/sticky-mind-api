@@ -59,7 +59,7 @@ export class NotesController {
   async getNotes(@Req() request) {
     const token = request.headers.authorization?.split(' ')[1];
     const userId = await this.jwt.getUserIdFromToken(token);
-    // console.log(userId);
+    // (userId);
     return await this.notesService.getNotes(userId);
   }
   //get one

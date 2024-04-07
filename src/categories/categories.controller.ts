@@ -47,7 +47,7 @@ export class CategoriesController {
   ) {
     const token = request.headers.authorization?.split(' ')[1];
     const userId = await this.jwt.getUserIdFromToken(token);
-    console.log(userId);
+
     return await this.categogryService.addCategory(dto, userId);
   }
 
@@ -60,7 +60,7 @@ export class CategoriesController {
   async getTasks(@Req() request) {
     const token = request.headers.authorization?.split(' ')[1];
     const userId = await this.jwt.getUserIdFromToken(token);
-    // console.log(userId);
+
     return await this.categogryService.getCategories(userId);
   }
   //get one
